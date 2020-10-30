@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 
 public class ObjetoEnviaEmail {
 
-	private String userName = "jhonatanemailformacaojavaweb@gmail.com";
+	private String userName = "";
 	private String senha = "JH.08.28.97";
 	private String listaDestinatarios = "";
 	private String nomeRemetente = "";
