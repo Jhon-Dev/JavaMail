@@ -26,6 +26,8 @@ public class AppTest {
 		/*Olhe as configurações smtl do seu email*/
 		 
 		 Properties properties = new Properties();
+		 
+		 properties.put("mail.ssl.trust", "*");
 		 properties.put("mail.smtp.auth", "true"); /*Autorização*/
 		 properties.put("mail.smtp.starttls", "true"); /*Autenticação*/
 		 properties.put("mail.smtp.host", "smtp.gmail.com"); /*Servidor gmail Google*/
@@ -45,7 +47,7 @@ public class AppTest {
 		
 		Message message = new MimeMessage(session);
 		
-		message.setFrom(new InternetAddress(userName));  /*Quem está enviando*/
+		message.setFrom(new InternetAddress(userName, "Jhonatan Dev"));  /*Quem está enviando*/
 		
 		message.setRecipients(Message.RecipientType.TO, toUser); /*Email de destino*/
 		
