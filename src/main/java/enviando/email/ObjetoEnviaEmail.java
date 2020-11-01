@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 
 public class ObjetoEnviaEmail {
 
-	private String userName = "";
+	private String userName = "jhonatanemailformacaojavaweb@gmail.com";
 	private String senha = "JH.08.28.97";
 	private String listaDestinatarios = "";
 	private String nomeRemetente = "";
@@ -29,7 +29,7 @@ public class ObjetoEnviaEmail {
 
 	}
 	
-	     public void enviarEmail()  throws Exception  {
+	     public void enviarEmail(boolean envioHtml)  throws Exception  {
 	
 				 
 				/*Olhe as configurações smtl do seu email*/
@@ -62,7 +62,13 @@ public class ObjetoEnviaEmail {
 				
 				message.setSubject(assuntoEmail); /*Assunto do e-mail*/
 				
-				message.setText(textoEmail);
+				
+				if (envioHtml) {
+					message.setContent(textoEmail, "text/html; charset=utf-8");
+			
+				} else {				
+					message.setText(textoEmail);				
+				}			
 				
 				Transport.send(message);
 		
