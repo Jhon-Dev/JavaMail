@@ -31,7 +31,7 @@ public class AppTest {
 				                                           "Chegou o email enviado com Java",
 				                                           stringBuilderTextEmail.toString());
 
-		enviaEmail.enviarEmail(true);
+		enviaEmail.enviarAnexol(true);
 
 	}
 }

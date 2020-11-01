@@ -5,14 +5,19 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
 import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.Message;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
@@ -80,6 +85,72 @@ public class ObjetoEnviaEmail {
 				Transport.send(message);
 		
 	}
+	     
+	     public void enviarAnexol(boolean envioHtml)  throws Exception  {
+	    		
+			 
+				/*Olhe as configurações smtl do seu email*/
+				 
+				 Properties properties = new Properties();
+				 
+				 properties.put("mail.ssl.trust", "*");
+				 properties.put("mail.smtp.auth", "true"); /*Autorização*/
+				 properties.put("mail.smtp.starttls", "true"); /*Autenticação*/
+				 properties.put("mail.smtp.host", "smtp.gmail.com"); /*Servidor gmail Google*/
+				 properties.put("mail.smtp.port", "465");  /*Porta do servidor*/
+				 properties.put("mail.smtp.socketFactory.port", "465");  /*Expecifica a porta a ser conectada pelo socket*/
+				 properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");  /*Class socket de conexão ao SMTP*/
+				
+				Session session = Session.getInstance(properties, new  Authenticator() {
+				
+					@Override
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(userName, senha);
+					}
+				});
+				
+				Address[] toUser = InternetAddress.parse(listaDestinatarios);
+				
+				Message message = new MimeMessage(session);
+				
+				message.setFrom(new InternetAddress(userName, nomeRemetente));  /*Quem está enviando*/
+				
+				message.setRecipients(Message.RecipientType.TO, toUser); /*Email de destino*/
+				
+				message.setSubject(assuntoEmail); /*Assunto do e-mail*/
+				
+				
+				/*Parte 1 do e-mail e o texto e a descrição do e-mail*/
+				MimeBodyPart corpoEmail = new MimeBodyPart();
+								
+				
+				if (envioHtml) {
+					corpoEmail.setContent(textoEmail, "text/html; charset=utf-8");
+			
+				} else {				
+					corpoEmail.setText(textoEmail);				
+				}
+				
+				/*Parte 2 do e-mail e o texto e a descrição do e-mail*/
+				MimeBodyPart anexoEmail = new MimeBodyPart();
+				
+				/*Aqui onde é passado o simuladorDePdf você passa o seu arquivo gravado no bando de dados*/
+				anexoEmail.setDataHandler(new DataHandler(new ByteArrayDataSource(simuladorDePDF(), "applicatiom/pdf")));
+				anexoEmail.setFileName("anexoemail.pdf");
+				
+				Multipart multipart = new MimeMultipart();
+				multipart.addBodyPart(corpoEmail);
+				multipart.addBodyPart(anexoEmail);
+				
+				message.setContent(multipart);
+				
+				Transport.send(message);
+		
+	}
+
+	     
+	     
+	     
 	     /*
 	      *Esse método simula o PDF ou em qualquer arquivo que possa ser enviado por enexo no email.
 	      *Você pode pegar o arquivo no seu banco de dados base64, byte[], Stream de Arquivos.
